@@ -10,7 +10,7 @@ jobs:
       - restore_cache:
           keys: UdaPeople_Product-{{ checksum "package-lock.json" }}
       - run: 
-          name: NPM Installation and build
+          name: Frontend build
           command: |
             cd frontend
             npm install
@@ -28,7 +28,7 @@ jobs:
       - restore_cache:
           keys: UdaPeople_Product-{{ checksum "backend-build"}}
       - run: 
-          name: NPM Installation and build
+          name: Backend Build
           command: |
             cd backend
             npm install
