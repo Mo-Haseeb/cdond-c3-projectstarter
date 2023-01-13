@@ -16,8 +16,8 @@ jobs:
             npm install
             npm run build
       - save_cache:
-        paths: [frontend/node_modules]
-        key: UdaPeople_Product-{{ checksum "package-lock.json" }}
+          paths: [frontend/node_modules]
+          key: UdaPeople_Product-{{ checksum "package-lock.json" }}
 
 
   build-backend:
@@ -34,8 +34,8 @@ jobs:
             npm install
             npm run build 
       - save_cache:
-        paths: [backend/node_modules]
-        key: UdaPeople_Product-{{ checksum "package-lock.json" }}
+          paths: [backend/node_modules]
+          key: UdaPeople_Product-{{ checksum "package-lock.json" }}
 
 
 
