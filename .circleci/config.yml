@@ -8,7 +8,8 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [UdaPeople_Product-{{ checksum "package-lock.json" }}]
+          keys: 
+            - UdaPeople_Product-{{ checksum "package-lock.json" }}
       - run: 
           name: Frontend build
           command: |
@@ -17,7 +18,8 @@ jobs:
             npm run build
       - save_cache:
           paths: [frontend/node_modules]
-          key: [UdaPeople_Product-{{ checksum "package-lock.json" }}]
+          key: 
+            - UdaPeople_Product-{{ checksum "package-lock.json" }}
 
 
   build-backend:
@@ -26,7 +28,8 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [UdaPeople_Product-{{ checksum "backend-build"}}]
+          keys: 
+            - UdaPeople_Product-{{ checksum "backend-build"}}
       - run: 
           name: Backend Build
           command: |
@@ -35,7 +38,8 @@ jobs:
             npm run build 
       - save_cache:
           paths: [backend/node_modules]
-          key: [UdaPeople_Product-{{ checksum "package-lock.json" }}]
+          key: 
+            - UdaPeople_Product-{{ checksum "package-lock.json" }}
 
 
 
