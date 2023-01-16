@@ -15,6 +15,10 @@ jobs:
             cd frontend
             npm install
             npm run build
+       - run:
+          command: |
+            pwd
+            ls -larth 
       - save_cache:
           paths: [frontend/node_modules]
           key: UdaPeople_Product-{{ checksum "package-lock.json" }}
