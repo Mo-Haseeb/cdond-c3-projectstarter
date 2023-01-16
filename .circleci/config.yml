@@ -82,8 +82,8 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-        keys: 
-          - backendUdaPeople_Product-{{ checksum "backend/package-lock.json" }}
+          keys: 
+            - backendUdaPeople_Product-{{ checksum "backend/package-lock.json" }}
       - run:    
           name: Backend Scan
           command: |
@@ -97,8 +97,8 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-        keys: 
-          - frontendUdaPeople_Product-{{ checksum "frontend/package-lock.json" }}
+          keys: 
+            - frontendUdaPeople_Product-{{ checksum "frontend/package-lock.json" }}
       - run:    
           name: Frontend Scan
           command: |
@@ -120,7 +120,7 @@ workflows:
             - build-frontend
       - scan-backend:
           requires:
-            - build-frontend
+            - build-backend
       - scan-frontend:
           requires:
             - build-frontend
