@@ -13,16 +13,6 @@ commands:
               channel: cicd-pipeline
               template: basic_fail_1
 
-#    notify_on_success:
-#        docker:
-#          - image: cimg/base:stable
-#        steps:
-#          - slack/notify:
-#              event: pass
-#              channel: cicd-pipeline
-#              template: success_tagged_deployment_1
-
-
 jobs:
 
   build-frontend:
@@ -112,10 +102,11 @@ jobs:
           command: |
             cd backend
             npm install
+            npm audit fix --force --audit-level=critical
+            npm audit fix --force --audit-level=critical
             npm audit --audit-level=critical       
       - notify_on_failure
  
-#            npm audit fix --force --audit-level=critical
 
   scan-frontend:
     docker:
@@ -133,6 +124,16 @@ jobs:
             npm audit fix --audit-level=critical --force
             npm audit fix --audit-level=critical --force
             npm audit --audit-level=critical
+
+
+  notify_on_success:
+      docker:
+        - image: cimg/base:stable
+      steps:
+        - slack/notify:
+            event: pass
+            channel: cicd-pipeline
+            template: success_tagged_deployment_1           
 
           
 workflows:
@@ -152,3 +153,7 @@ workflows:
       - scan-frontend:
           requires:
             - build-frontend
+      - notify_on_success:
+          requires:
+            - scan-backend
+            - scan-frontend
