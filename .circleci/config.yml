@@ -51,8 +51,8 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: 
-            - backendUdaPeople_Product-{{ checksum "backend/package-lock.json" }}
+        keys: 
+          - backendUdaPeople_Product-{{ checksum "backend/package-lock.json" }}
       - run:    
           name: Backend Test
           command: |
@@ -66,14 +66,45 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: 
-            - frontendUdaPeople_Product-{{ checksum "frontend/package-lock.json" }}
+        keys: 
+          - frontendUdaPeople_Product-{{ checksum "frontend/package-lock.json" }}
       - run:    
           name: Frontend Test
           command: |
             cd frontend
             npm install
             npm run test
+
+
+  scan-backend:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - restore_cache:
+        keys: 
+          - backendUdaPeople_Product-{{ checksum "backend/package-lock.json" }}
+      - run:    
+          name: Backend Scan
+          command: |
+            cd backend
+            npm install
+            npm audit --audit-level=critical        
+
+  scan-frontend:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - restore_cache:
+        keys: 
+          - frontendUdaPeople_Product-{{ checksum "frontend/package-lock.json" }}
+      - run:    
+          name: Frontend Scan
+          command: |
+            cd frontend
+            npm install
+            npm audit --audit-level=critical
 
           
 workflows:
@@ -85,5 +116,11 @@ workflows:
           requires:
             - build-backend
       - test-frontend:
+          requires:
+            - build-frontend
+      - scan-backend:
+          requires:
+            - build-frontend
+      - scan-frontend:
           requires:
             - build-frontend
