@@ -185,6 +185,25 @@ jobs:
             echo $BACKEND_PUBLIC_IP >> .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
     
+    
+  configure-infrastructure:
+    docker:
+      - image: cimg/python:3.10
+    steps:
+      - checkout
+      - install_ansible
+      - install_awscli
+      - add_ssh_keys:
+          fingerprints: ["f3:f0:fd:de:30:61:79:a7:d9:eb:09:84:0d:b6:bf:4c"]
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Configure server using ansible playbook 
+          command: |
+            cd .circleci/ansible
+            cat inventory.txt
+            ansible-playbook -i inventory.txt configure-server.yml
+      - destroy_environment      
 
 workflows:
   default:
