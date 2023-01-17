@@ -13,6 +13,29 @@ commands:
               channel: cicd-pipeline
               template: basic_fail_1
 
+
+    install_awscli:
+      description: Install AWS CLI v2
+      steps:
+        - run:
+            name: Install AWS CLI v2
+            command: |
+              curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+              unzip awscliv2.zip
+              sudo ./aws/install
+       
+
+    install_ansible:
+      description: Install Ansible
+      steps:
+        - run:
+            name: Install Ansible
+            command: |
+              python3 -m pip install --user ansible              
+
+
+    destroy-environment:
+
 jobs:
 
   build-frontend:
@@ -126,34 +149,58 @@ jobs:
             npm audit --audit-level=critical
 
 
-  notify_on_success:
-      docker:
-        - image: cimg/base:stable
-      steps:
-        - slack/notify:
-            event: pass
-            channel: cicd-pipeline
-            template: success_tagged_deployment_1           
+  deploy-infrastructure:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: installation tar and gzip
+          command: | 
+            yum install tar -y
+            yum install unzip -y
+      - run:
+          name: Backend Infrastructure Installation
+          command: |
+            aws cloudformation deploy \
+            --template-file .circleci/files/backend.yml \
+            --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+            --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
+            --tags project=udapeople
+      - run:
+          name: Frontend Infrastructure Installation
+          command: |
+            aws cloudformation deploy \
+            --template-file .circleci/files/backend.yml \
+            --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7" \
+            --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
+            --tags project=udapeople
+      - run:
+          name: Add EC2 Instance IP to the inventory
+          command: |
+            BACKEND_PUBLIC_IP=$(aws ec2 describe-instances \
+              --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+              --output text)
+            echo $BACKEND_PUBLIC_IP >> .circleci/ansible/inventory.txt
+            cat .circleci/ansible/inventory.txt
+    
 
-          
 workflows:
   default:
     jobs:
-      - build-backend
-      - build-frontend
-      - test-backend:
-          requires:
-            - build-backend
-      - test-frontend:
-          requires:
-            - build-frontend
-      - scan-backend:
-          requires:
-            - build-backend
-      - scan-frontend:
-          requires:
-            - build-frontend
-      - notify_on_success:
-          requires:
-            - scan-backend
-            - scan-frontend
+      #- build-backend
+      #- build-frontend
+      #- test-backend:
+          #requires:
+            #- build-backend
+      #- test-frontend:
+          #requires:
+            #- build-frontend
+      #- scan-backend:
+          #requires:
+            #- build-backend
+      #- scan-frontend:
+          #requires:
+            #- build-frontend
+      - deploy-infrastructure
