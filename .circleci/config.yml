@@ -202,7 +202,10 @@ jobs:
               --output text)
             echo $BACKEND_PUBLIC_IP >> .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
-    
+      - persist_to_workspace:
+        root: ~/
+        paths:
+          - project/.circleci/ansible/inventory.txt
     
   configure-infrastructure:
     docker:
@@ -223,6 +226,24 @@ jobs:
             ansible-playbook -i inventory.txt configure-server.yml
       - destroy-environment      
 
+  run-migrations:
+    docker:
+      # Docker image here that supports NodeJS
+    steps:
+      # Checkout code from git
+      - run:
+          name: Run migrations
+          command: |
+            # Your code here
+            exit 1
+      - run:
+          name: Send migration results to memstash
+          command: |
+            # Your code here
+            exit 1
+      # Here's where you will add some code to rollback on failure    
+
+      
 workflows:
   default:
     jobs:
