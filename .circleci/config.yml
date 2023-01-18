@@ -277,6 +277,7 @@ jobs:
           command: |
             cd backend
             npm install
+      - install_nodejs
       - run:
           name: Migration Result
           command: |
