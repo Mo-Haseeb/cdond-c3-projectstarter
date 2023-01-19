@@ -342,7 +342,7 @@ jobs:
       - attach_workspace:
           at: ~/
       - run:
-            - name: Install dependencies
+            - name: Install dependenciess
               command: |
                 cd backend
                 npm install
