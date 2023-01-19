@@ -269,6 +269,7 @@ jobs:
       - image: cimg/python:3.10
     steps:
       - checkout
+      - install_nodejs
       - restore_cache:
           keys: 
             - backendUdaPeople_Product-{{ checksum "backend/package-lock.json" }}
@@ -277,23 +278,23 @@ jobs:
           command: |
             cd backend
             npm install
-      - install_nodejs
+
       - run:
           name: Migration Result
           command: |
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
       - run:
-          name: Migration status on kvdb.io
-          command: |
-            if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
-            then
-              curl https://kvdb.io/${KVDB_BUCKET}/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
-            else
-              echo "No migrations are pending" 
-            fi
+          name: send migration result to kvdb
+          command: |
+            if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
+            then
+              curl https://kvdb.io/${KVDB_BUCKET}/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+            else
+              echo "No migrations are pending" 
+            fi
       - destroy-environment
-      - revert-migrations   
+      - revert-migrations
 
       
 workflows:
