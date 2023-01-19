@@ -277,7 +277,6 @@ jobs:
       - run:
           name: Migration Result
           command: |
-            ls -ll /home/circleci/project/
             cd backend
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
