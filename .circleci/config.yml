@@ -347,16 +347,16 @@ jobs:
                   npm install
           - run:
               name: Deploy Build Backend
-              command:
+              command: |
                 pwd
-                cd backend |
+                cd backend
                 npm run build
                 cd ..
                 pwd
                 tar -C backend -cvzf artifact.tar.gz dist/* package*
                 pwd
-                #cd .circleci/
                 ls -larth
+                sudo find / -name artifact*
                 cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
           - run:
               name: Deploy Ansible Backend
