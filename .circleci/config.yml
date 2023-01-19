@@ -341,6 +341,12 @@ jobs:
            fingerprints: ["04:47:91:df:93:42:69:4e:d0:e2:b8:b5:9c:73:ae:7e"]
        - attach_workspace:
            at: ~/
+       - run:
+            name: install dependencies
+            command: |
+                cd backend
+                npm install
+  
 #       - run:
 #          - name: Install dependenciess
 #            command: |
