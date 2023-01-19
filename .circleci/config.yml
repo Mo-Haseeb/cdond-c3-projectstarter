@@ -327,36 +327,41 @@ jobs:
       - destroy-environment
       - revert-migrations
 
-  deploy-backend:
-    docker:
-      - image: cimg/python:3.10
-    steps:
-       - checkout
-       - install_nodejs
-       - install_awscli
-       - restore_cache:
-           keys: 
-             - backendUdaPeople_Product-{{ checksum "backend/package-lock.json" }}
-       - add_ssh_keys:
-           fingerprints: ["04:47:91:df:93:42:69:4e:d0:e2:b8:b5:9c:73:ae:7e"]
-       - attach_workspace:
-           at: ~/
-       - run:
-           -  name: install dependencies
+
+      deploy-backend:
+        docker:
+          - image: cimg/python:3.10
+        steps:
+          - checkout
+          - install_awscli
+          - install_ansible
+          - install_nodejs
+          - add_ssh_keys:
+              fingerprints: [f3:f0:fd:de:30:61:79:a7:d9:eb:09:84:0d:b6:bf:4c]
+          - attach_workspace:
+              at: ~/
+          - restore_cache:  
+              keys:
+                 - backend-deps-{{ checksum "backend/package-lock.json" }}          
+          - run:
+              name: Install dependencies
               command: |
-                cd backend
-                npm install
-       - run: 
-            - name: Deploy backend
+                 cd backend
+                 npm install 
+          - run:
+              name: Deploy backend
               command: |
+                  # Generate production build of the backend
                   cd backend
                   npm run build
-                  cd backend
+                  # Archive the contents of the dist folder, along with backend package information
+                  cd ..
                   tar -czf artifact.tar.gz dist/* package*
+                  # Copy the files to the deploy role files folder to prepare for deploying it via ansible
                   cd .circleci
                   cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
-       - run:
-            - name: Deploy backenddd
+          - run:
+              name: Deploy backend
               command: |
                 export TYPEORM_MIGRATIONS_DIR=./migrations
                 export TYPEORM_ENTITIES=./modules/domain/**/*.entity{.ts,.js}
@@ -364,6 +369,46 @@ jobs:
                 cd .circleci/ansible
                 cat inventory.txt
                 ansible-playbook -i inventory.txt deploy-backend.yml
+          - destroy_environment  
+          - revert-migrations    
+
+  # deploy-backend:
+  #   docker:
+  #     - image: cimg/python:3.10
+  #   steps:
+  #      - checkout
+  #      - install_nodejs
+  #      - install_awscli
+  #      - restore_cache:
+  #          keys: 
+  #            - backendUdaPeople_Product-{{ checksum "backend/package-lock.json" }}
+  #      - add_ssh_keys:
+  #          fingerprints: ["04:47:91:df:93:42:69:4e:d0:e2:b8:b5:9c:73:ae:7e"]
+  #      - attach_workspace:
+  #          at: ~/
+  #      - run:
+  #          -  name: install dependencies
+  #             command: |
+  #               cd backend
+  #               npm install
+  #      - run: 
+  #           - name: Deploy backend
+  #             command: |
+  #                 cd backend
+  #                 npm run build
+  #                 cd backend
+  #                 tar -czf artifact.tar.gz dist/* package*
+  #                 cd .circleci
+  #                 cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
+  #      - run:
+  #           - name: Deploy backenddd
+  #             command: |
+  #               export TYPEORM_MIGRATIONS_DIR=./migrations
+  #               export TYPEORM_ENTITIES=./modules/domain/**/*.entity{.ts,.js}
+  #               export TYPEORM_MIGRATIONS=./migrations/*.ts
+  #               cd .circleci/ansible
+  #               cat inventory.txt
+  #               ansible-playbook -i inventory.txt deploy-backend.yml
 
 workflows:
   default:
