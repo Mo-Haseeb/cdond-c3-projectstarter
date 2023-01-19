@@ -345,45 +345,26 @@ jobs:
                 command: |
                   cd backend
                   npm install
+          - run:
+              name: Deploy Backend
+              command: |
+                npm run build
+                cd backend
+                tar -czf artifact.tar.gz dist/* package*
+                cd .circleci/
+                cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
+          - run:
+              name: Deploy Backend
+              command: |
+                export TYPEORM_MIGRATIONS_DIR=./migrations 
+                export TYPEORM_ENTITIES=./modules/domain/**/*.entity{.ts,.js}
+                export TYPEORM_MIGRATIONS=./migrations/*.ts
+                cd .circleci/ansible
+                cat inventory.txt
+                ansible-playbook -i inventory.txt deploy-backend.yml
 
-  # deploy-backend:
-  #   docker:
-  #     - image: cimg/python:3.10
-  #   steps:
-  #      - checkout
-  #      - install_nodejs
-  #      - install_awscli
-  #      - restore_cache:
-  #          keys: 
-  #            - backendUdaPeople_Product-{{ checksum "backend/package-lock.json" }}
-  #      - add_ssh_keys:
-  #          fingerprints: ["04:47:91:df:93:42:69:4e:d0:e2:b8:b5:9c:73:ae:7e"]
-  #      - attach_workspace:
-  #          at: ~/
-  #      - run:
-  #          -  name: install dependencies
-  #             command: |
-  #               cd backend
-  #               npm install
-  #      - run: 
-  #           - name: Deploy backend
-  #             command: |
-  #                 cd backend
-  #                 npm run build
-  #                 cd backend
-  #                 tar -czf artifact.tar.gz dist/* package*
-  #                 cd .circleci
-  #                 cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
-  #      - run:
-  #           - name: Deploy backenddd
-  #             command: |
-  #               export TYPEORM_MIGRATIONS_DIR=./migrations
-  #               export TYPEORM_ENTITIES=./modules/domain/**/*.entity{.ts,.js}
-  #               export TYPEORM_MIGRATIONS=./migrations/*.ts
-  #               cd .circleci/ansible
-  #               cat inventory.txt
-  #               ansible-playbook -i inventory.txt deploy-backend.yml
 
+     
 workflows:
   default:
     jobs:
