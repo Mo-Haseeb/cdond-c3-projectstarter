@@ -336,41 +336,15 @@ jobs:
           - install_awscli
           - install_ansible
           - install_nodejs
-          # - add_ssh_keys:
-          #     fingerprints: ["04:47:91:df:93:42:69:4e:d0:e2:b8:b5:9c:73:ae:7e"]
-          # - attach_workspace:
-          #     at: ~/
-          # - restore_cache:  
-          #     keys:
-          #        - backend-deps-{{ checksum "backend/package-lock.json" }}          
-          # - run:
-          #     name: Install dependencies
-          #     command: |
-          #        cd backend
-          #        npm install 
-          # - run:
-          #     name: Deploy backend
-          #     command: |
-          #         # Generate production build of the backend
-          #         cd backend
-          #         npm run build
-          #         # Archive the contents of the dist folder, along with backend package information
-          #         cd ..
-          #         tar -czf artifact.tar.gz dist/* package*
-          #         # Copy the files to the deploy role files folder to prepare for deploying it via ansible
-          #         cd .circleci
-          #         cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
-          # - run:
-          #     name: Deploy backend
-          #     command: |
-          #       export TYPEORM_MIGRATIONS_DIR=./migrations
-          #       export TYPEORM_ENTITIES=./modules/domain/**/*.entity{.ts,.js}
-          #       export TYPEORM_MIGRATIONS=./migrations/*.ts
-          #       cd .circleci/ansible
-          #       cat inventory.txt
-          #       ansible-playbook -i inventory.txt deploy-backend.yml
-          # - destroy-environment
-          # - revert-migrations    
+          - add_ssh_keys
+              fingerprints: ["04:47:91:df:93:42:69:4e:d0:e2:b8:b5:9c:73:ae:7e"]
+          - attach_workspace:
+              at ~/
+           - run:
+                name: Install Dependencies   
+                command: |
+                  cd backend
+                  npm install
 
   # deploy-backend:
   #   docker:
