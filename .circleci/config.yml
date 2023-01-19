@@ -88,7 +88,7 @@ commands:
               then
                 cd ~/project/backend
                 npm install
-                npm run migration:revert
+                npm run migrations:revert
               fi
 
 jobs:
@@ -362,8 +362,8 @@ jobs:
                 cd .circleci/ansible
                 cat inventory.txt
                 ansible-playbook -i inventory.txt deploy-backend.yml
-
-
+          - destroy-environment
+          - revert-migrations
      
 workflows:
   default:
