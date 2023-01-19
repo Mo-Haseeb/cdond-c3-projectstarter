@@ -337,21 +337,21 @@ jobs:
        - restore_cache:
            keys: 
              - backendUdaPeople_Product-{{ checksum "backend/package-lock.json" }}
-#       - add_ssh_keys:
-#           fingerprints: ["04:47:91:df:93:42:69:4e:d0:e2:b8:b5:9c:73:ae:7e"]
-#       - attach_workspace:
-#           at: ~/
-#       - run:
-#           - name: Install dependenciess
-#             command: |
-#               cd backend
-#               npm install
-#       - run: 
-#           - name: Deploy backend
-#             command: |
-#               # Generate production build of the backend
-#               cd backend
-#               npm run build
+       - add_ssh_keys:
+           fingerprints: ["04:47:91:df:93:42:69:4e:d0:e2:b8:b5:9c:73:ae:7e"]
+       - attach_workspace:
+           at: ~/
+       - run:
+           - name: Install dependenciess
+                command: |
+               cd backend
+               npm install
+       - run: 
+           - name: Deploy backend
+             command: |
+               # Generate production build of the backend
+               cd backend
+               npm run build
 
 #               # Archive the contents of the dist folder, along with backned package information
 #               cd backend
