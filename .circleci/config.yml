@@ -353,7 +353,7 @@ jobs:
                 npm run build
                 cd ..
                 pwd
-                tar -C backend -cvzf artifact.tar.gz dist/* package*
+                tar -C backend -cvzf artifact.tar.gz .
                 pwd
                 ls -larth
                 sudo find / -name artifact*
