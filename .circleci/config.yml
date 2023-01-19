@@ -265,6 +265,7 @@ jobs:
     steps:
       - checkout
       - install_nodejs
+      - install_awscli
       - restore_cache:
           keys: 
             - backendUdaPeople_Product-{{ checksum "backend/package-lock.json" }}
@@ -273,10 +274,11 @@ jobs:
           command: |
             cd backend
             npm install
-
       - run:
           name: Migration Result
           command: |
+            ls -ll /home/circleci/project/
+            cd backend
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
       - run:
