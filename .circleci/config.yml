@@ -352,26 +352,26 @@ jobs:
 #            command: |
 #              cd backend
 #              npm install
-      - run: 
-          - name: Deploy backend
-            command: |
-               # Generate production build of the backend
-               cd backend
-               npm run build
-               cd backend
-               tar -czf artifact.tar.gz dist/* package*
-               cd .circleci
-               cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
-      - run:
-          - name: Deploy backenddd
-            command: |
-              export TYPEORM_MIGRATIONS_DIR=./migrations
-              export TYPEORM_ENTITIES=./modules/domain/**/*.entity{.ts,.js}
-              export TYPEORM_MIGRATIONS=./migrations/*.ts
-      
-              cd .circleci/ansible
-              cat inventory.txt
-              ansible-playbook -i inventory.txt deploy-backend.yml
+        - run: 
+              - name: Deploy backend
+                command: |
+                   # Generate production build of the backend
+                   cd backend
+                   npm run build
+                   cd backend
+                   tar -czf artifact.tar.gz dist/* package*
+                   cd .circleci
+                   cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
+        - run:
+              - name: Deploy backenddd
+                command: |
+                  export TYPEORM_MIGRATIONS_DIR=./migrations
+                  export TYPEORM_ENTITIES=./modules/domain/**/*.entity{.ts,.js}
+                  export TYPEORM_MIGRATIONS=./migrations/*.ts
+
+                  cd .circleci/ansible
+                  cat inventory.txt
+                  ansible-playbook -i inventory.txt deploy-backend.yml
 
 
 workflows:
