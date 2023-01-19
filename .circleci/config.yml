@@ -346,16 +346,16 @@ jobs:
              command: |
                cd backend
                npm install
-       - run: 
-           - name: Deploy backend
-             command: |
+ #      - run: 
+ #          - name: Deploy backend
+#             command: |
                # Generate production build of the backend
-               cd backend
-               npm run build
-               cd backend
-               tar -czf artifact.tar.gz dist/* package*
-               cd .circleci
-               cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
+#               cd backend
+#               npm run build
+#               cd backend
+#               tar -czf artifact.tar.gz dist/* package*
+#               cd .circleci
+#               cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
 #       - run:
 #           - name: Deploy backenddd
 #             command: |
