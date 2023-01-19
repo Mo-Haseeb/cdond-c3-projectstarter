@@ -342,10 +342,10 @@ jobs:
       - attach_workspace:
           at: ~/
       - run:
-        - name: Install dependencies
-          command: |
-            cd backend
-            npm install
+            - name: Install dependencies
+              command: |
+                cd backend
+                npm install
       - run: 
           - name: Deploy backend
             command: |
@@ -361,7 +361,7 @@ jobs:
               cd .circleci
               cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
       - run:
-          - name: Deploy backend
+          - name: Deploy backenddd
             command: |
               export TYPEORM_MIGRATIONS_DIR=./migrations
               export TYPEORM_ENTITIES=./modules/domain/**/*.entity{.ts,.js}
