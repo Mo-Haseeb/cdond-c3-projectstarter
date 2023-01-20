@@ -1,8 +1,9 @@
 ---
 
-- name: "configuration play." 
+- name: "configuration play."
   hosts: web
   user: ubuntu
+  become: true
   become_method: sudo
   become_user: root  
   gather_facts: false
@@ -36,5 +37,5 @@
     -  NODE_ENV: production
     - VERSION: "1" 
 
-    roles:
-        - deploy
+  roles:
+      - deploy
