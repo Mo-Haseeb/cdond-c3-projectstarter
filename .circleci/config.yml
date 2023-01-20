@@ -413,7 +413,6 @@ jobs:
       - run:
          name: Update cloudfront
          command: |
-        # Change the initial stack name, as applicable to you
             aws cloudformation deploy \
             --template-file .circleci/files/cloudfront.yml \
             --stack-name InitialStack \
