@@ -470,7 +470,7 @@ workflows:
       - scan-frontend:
            requires:
              - build-frontend
-      - deploy-infrastructure
+      - deploy-infrastructure:
             requires:
               - scan-backend
               - scan-frontend
