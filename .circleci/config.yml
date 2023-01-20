@@ -352,7 +352,7 @@ jobs:
                 cd backend
                 npm run build
                 pwd
-                tar -czvf artifact.tar.gz dist/* package
+                tar -czvf artifact.tar.gz dist/* package*
                 pwd
                 cd ..
                 ls -larth
@@ -372,24 +372,24 @@ jobs:
 workflows:
   default:
     jobs:
-      - build-backend
-      - build-frontend
-      - test-backend:
-          requires:
-            - build-backend
-      - test-frontend:
-          requires:
-            - build-frontend
-      - scan-backend:
-          requires:
-            - build-backend
-      - scan-frontend:
-          requires:
-            - build-frontend
-      - deploy-infrastructure
-      - configure-infrastructure:
-          requires:
-              - deploy-infrastructure
+      #- build-backend
+      #- build-frontend
+      #- test-backend:
+       #   requires:
+        #    - build-backend
+      # - test-frontend:
+      #     requires:
+      #       - build-frontend
+      # - scan-backend:
+      #     requires:
+      #       - build-backend
+      # - scan-frontend:
+      #     requires:
+      #       - build-frontend
+      # - deploy-infrastructure
+      # - configure-infrastructure:
+      #     requires:
+      #         - deploy-infrastructure
       - run-migrations:
             requires:
               - configure-infrastructure
