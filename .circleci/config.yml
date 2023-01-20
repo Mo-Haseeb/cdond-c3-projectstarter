@@ -434,31 +434,23 @@ jobs:
       - checkout
       - install_awscli
       - install_ansible
-      - install_nodejs
       - run:
-         name: Current Stack name
-         command: |
-          export STACKS=($(aws cloudformation list-stacks \
-          --query "StackSummaries[*].StackName" \
-          --stack-status-filter CREATE_COMPLETE --no-paginate --output text))
-          echo Stack names: "${STACKS[@]}"
-    - run:
-        name: Remove old stacks and files
-        command: |
-          export STACKS=($(aws cloudformation list-stacks \
-          --query "StackSummaries[*].StackName" \
-          --stack-status-filter CREATE_COMPLETE --no-paginate --output text))
-          echo Stack names: "${STACKS[@]}"
+          name: Remove old stacks and files
+          command: |
+            export STACKS=($(aws cloudformation list-stacks \
+            --query "StackSummaries[*].StackName" \
+            --stack-status-filter CREATE_COMPLETE --no-paginate --output text))
+            echo Stack names: "${STACKS[@]}"
 
-          export OldWorkflowID=$(curl --insecure https://kvdb.io/${KVDB_BUCKET}/old_workflow_id)
-          echo Old Workflow ID: $OldWorkflowID
+            export OldWorkflowID=$(curl --insecure https://kvdb.io/${KVDB_BUCKET}/old_workflow_id)
+            echo Old Workflow ID: $OldWorkflowID
 
-          if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
-          then
-            aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
-            aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
-            aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
-          fi
+            if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
+            then
+              aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
+              aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
+              aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
+            fi
 
           
 workflows:
