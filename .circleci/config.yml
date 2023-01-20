@@ -1,5 +1,5 @@
 version: 2.1
-##
+
 
 orbs: 
     slack: circleci/slack@4.10.1
@@ -470,7 +470,13 @@ workflows:
       - scan-frontend:
            requires:
              - build-frontend
-      - deploy-infrastructure
+      - deploy-infrastructure:
+          requires:
+            - scan-backend
+            - scan-frontend
+          filters:
+            braches:
+              only: [master]
       - configure-infrastructure:
            requires:
                - deploy-infrastructure
@@ -493,4 +499,3 @@ workflows:
       - cleanup:
           requires:
             - cloudfront-update
-
