@@ -351,12 +351,11 @@ jobs:
                 pwd
                 cd backend
                 npm run build
+                pwd
+                tar -czvf artifact.tar.gz dist/* package
+                pwd
                 cd ..
-                pwd
-                tar -C backend -cvzf artifact.tar.gz .
-                pwd
                 ls -larth
-                sudo find / -name artifact*
                 cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
           - run:
               name: Deploy Ansible Backend
