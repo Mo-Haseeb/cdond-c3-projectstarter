@@ -1,4 +1,4 @@
 [URL01] https://github.com/Mo-Haseeb/cdond-c3-projectstarter.git
 [URL02] 
-S3 URL: http://udapeople-67c08b2.s3-website-us-east-1.amazonaws.com
-CloudFront URL: https://d2wvn87lvasf9u.cloudfront.net
+S3 URL: http://udapeople-3ad9e12.s3-website-us-east-1.amazonaws.com
+CloudFront URL :http://dydiqmfvwzjz1.cloudfront.net/#/employees
